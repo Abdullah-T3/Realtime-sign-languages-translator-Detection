@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:realtime_sign_languages_translator/core/Responsive/Models/device_info.dart';
 
 class CherryToastMsgs {
-  // ignore: non_constant_identifier_names
-  static CherryToastSuccess({
+  // Success toast
+  static CherryToast CherryToastSuccess({
     required DeviceInfo info,
     required BuildContext context,
     required String title,
@@ -13,6 +13,7 @@ class CherryToastMsgs {
     AnimationType animationType = AnimationType.fromTop,
     Duration duration = const Duration(seconds: 3),
   }) {
+    // Create the toast instance and return it
     return CherryToast.success(
       title: Text(title, style: TextStyle(color: Colors.white)),
       toastDuration: duration,
@@ -23,11 +24,11 @@ class CherryToastMsgs {
       animationType: animationType,
       autoDismiss: true,
       description: Text(description, style: TextStyle(color: Colors.white70)),
-    ).show(context);
+    );
   }
 
-  // ignore: non_constant_identifier_names
-  static CherryToastError({
+  // Error toast
+  static CherryToast CherryToastError({
     required DeviceInfo info,
     required BuildContext context,
     required String title,
@@ -35,6 +36,7 @@ class CherryToastMsgs {
     AnimationType animationType = AnimationType.fromTop,
     Duration duration = const Duration(seconds: 3),
   }) {
+    // Create the toast instance and return it
     return CherryToast.error(
       title: Text(title, style: TextStyle(color: Colors.white)),
       toastDuration: duration,
@@ -45,6 +47,6 @@ class CherryToastMsgs {
       animationType: animationType,
       autoDismiss: true,
       description: Text(description, style: TextStyle(color: Colors.white70)),
-    ).show(context);
+    );
   }
 }
