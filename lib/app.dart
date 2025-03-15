@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: ColorsManager.backgroundColor),
       onGenerateRoute: appRouter.generateRoutes,
-      initialRoute: Routes.login,
+      initialRoute: Routes.loginscreen,
     );
   }
 }

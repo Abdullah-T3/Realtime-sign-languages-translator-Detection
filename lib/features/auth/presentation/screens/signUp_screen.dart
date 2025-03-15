@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:realtime_sign_languages_translator/core/Responsive/ui_component/info_widget.dart';
-import 'package:realtime_sign_languages_translator/core/helper/FormValidator/Validator.dart';
+import 'package:realtime_sign_languages_translator/core/helper/FormValidator/Validator.dart'
+    show ValidatorHelper;
 import 'package:realtime_sign_languages_translator/core/helper/extantions.dart';
 import 'package:realtime_sign_languages_translator/core/routing/routes.dart';
 import 'package:realtime_sign_languages_translator/core/shared/cherryToast/CherryToastMsgs.dart';
@@ -10,29 +11,31 @@ import 'package:realtime_sign_languages_translator/core/theming/styles.dart';
 import 'package:realtime_sign_languages_translator/features/auth/presentation/logic/firebase_auth_cubit.dart';
 import 'package:realtime_sign_languages_translator/features/auth/presentation/screens/widgets/customTextField.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController emailController = TextEditingController();
-
+  TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return InfoWidget(
       builder: (context, deviceInfo) {
-        return SafeArea(
-          child: Scaffold(
-            body: SingleChildScrollView(
+        return Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
               child: Column(
                 children: [
+                  // Constrained Stack for background and header
                   SizedBox(
-                    height: deviceInfo.screenHeight * 0.4,
+                    height:
+                        deviceInfo.screenHeight * 0.4, // Provide fixed height
                     child: Stack(
                       children: [
                         // Circular background
@@ -49,9 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   width: 60,
                                   color: ColorsManager.secondaryGridColor,
                                 ),
-                                borderRadius: BorderRadius.circular(
-                                  deviceInfo.screenWidth * 1.7,
-                                ),
+                                borderRadius: BorderRadius.circular(1000),
                               ),
                             ),
                           ),
@@ -61,9 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           left: 24,
                           top: 54,
                           child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: deviceInfo.screenWidth * 0.023,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,13 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Login',
-                                      style: TextStyles.lightBlueText.copyWith(
-                                        fontSize: deviceInfo.screenWidth * 0.08,
-                                      ),
+                                      'Sign up',
+                                      style: TextStyles.lightBlueText,
                                     ),
                                     SizedBox(
-                                      width: deviceInfo.screenWidth * 0.32,
+                                      width: deviceInfo.screenWidth * 0.25,
                                     ),
                                     Container(
                                       width: deviceInfo.screenWidth * 0.3,
@@ -93,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         color: ColorsManager.secondaryGridColor,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
-                                            deviceInfo.screenWidth * 0.05,
+                                            28,
                                           ),
                                         ),
                                       ),
@@ -101,31 +98,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: InkWell(
                                           onTap: () {
                                             context.pushReplacementNamed(
-                                              Routes.signUpScreen,
+                                              Routes.loginscreen,
                                             );
                                           },
                                           child: Text(
-                                            'Register',
+                                            'Login',
                                             textAlign: TextAlign.center,
                                             style: TextStyles.lightBlueText
-                                                .copyWith(
-                                                  fontSize:
-                                                      deviceInfo.screenWidth *
-                                                      0.04,
-                                                ),
+                                                .copyWith(fontSize: 18),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: deviceInfo.screenHeight * 0.007,
-                                ),
+                                const SizedBox(height: 8),
                                 Text(
-                                  'Welcome back!',
+                                  'Create an account to continue',
                                   style: TextStyles.lightBlueText.copyWith(
-                                    fontSize: deviceInfo.screenWidth * 0.067,
+                                    fontSize: 18,
                                   ),
                                 ),
                               ],
@@ -135,16 +126,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: deviceInfo.screenHeight * 0.04),
-                  BlocConsumer<FirebaseAuthCubit, FirebaseAuthState>(
+                  const SizedBox(height: 24),
+                  // Authentication fields
+                  BlocListener<FirebaseAuthCubit, FirebaseAuthState>(
                     listener: (listenerContext, state) {
                       if (state is FirebaseAuthSuccess) {
                         CherryToastMsgs.CherryToastSuccess(
                           info: deviceInfo,
                           context: listenerContext,
                           title: "Success",
-                          description: "Login successful",
+                          description: "Sign up successfully",
                         ).show(listenerContext);
+
                         listenerContext.pushNamed(Routes.homescreen);
                       }
                       if (state is FirebaseAuthFailure) {
@@ -156,59 +149,72 @@ class _LoginScreenState extends State<LoginScreen> {
                         ).show(listenerContext);
                       }
                     },
-                    builder: (context, state) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: deviceInfo.screenWidth * 0.05,
-                        ),
-                        child: Column(
-                          children: [
-                            CustomTextField(
-                              label: "Email",
-                              controller: emailController,
-                              formValidator: (value) {
-                                return ValidatorHelper.isValidEmail(value);
-                              },
-                              hintText: 'Email',
-                            ),
-                            SizedBox(height: deviceInfo.screenHeight * 0.02),
-                            CustomTextField(
-                              label: "Password",
-                              controller: passwordController,
-                              formValidator: (value) {
-                                return ValidatorHelper.isValidPassword(value);
-                              },
-                              hintText: 'Password',
-                            ),
-                            SizedBox(height: deviceInfo.screenHeight * 0.08),
-                            Container(
-                              width: deviceInfo.screenWidth * 0.8,
-                              decoration: BoxDecoration(
-                                color: ColorsManager.primaryGridColor,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: deviceInfo.screenWidth * 0.05,
+                      ),
+                      child: Column(
+                        children: [
+                          CustomTextField(
+                            label: 'Name',
+                            controller: nameController,
+                            hintText: 'Enter your name',
+                            formValidator: ValidatorHelper.combineValidators([
+                              ValidatorHelper.isNotEmpty,
+                            ]),
+                          ),
+                          SizedBox(height: deviceInfo.screenHeight * 0.02),
+                          CustomTextField(
+                            label: 'Email',
+                            controller: emailController,
+                            hintText: 'Enter your email',
+                            formValidator: ValidatorHelper.combineValidators([
+                              ValidatorHelper.isNotEmpty,
+                              ValidatorHelper.isValidEmail,
+                            ]),
+                          ),
+                          SizedBox(height: deviceInfo.screenHeight * 0.02),
+                          CustomTextField(
+                            label: 'Password',
+                            controller: passwordController,
+                            hintText: 'Enter your password',
+                            formValidator: ValidatorHelper.combineValidators([
+                              ValidatorHelper.isNotEmpty,
+                              ValidatorHelper.isValidPassword,
+                            ]),
+                          ),
+                          SizedBox(height: deviceInfo.screenHeight * 0.06),
+                          Container(
+                            width: deviceInfo.screenWidth * 0.8,
+                            height: deviceInfo.screenHeight * 0.06,
+                            decoration: ShapeDecoration(
+                              color: ColorsManager.primaryGridColor,
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
-                                  deviceInfo.screenWidth * 0.1,
-                                ),
-                              ),
-                              child: MaterialButton(
-                                height: deviceInfo.screenHeight * 0.06,
-                                onPressed: () async {
-                                  await context
-                                      .read<FirebaseAuthCubit>()
-                                      .signIn(
-                                        emailController.text,
-                                        passwordController.text,
-                                      );
-                                },
-                                child: const Text(
-                                  'Login',
-                                  style: TextStyles.lightBlueText,
+                                  deviceInfo.screenWidth * 0.04,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      );
-                    },
+                            child: MaterialButton(
+                              height: deviceInfo.screenHeight * 0.06,
+                              onPressed: () async {
+                                await context.read<FirebaseAuthCubit>().signUp(
+                                  emailController.text,
+                                  passwordController.text,
+                                  nameController.text,
+                                );
+                              },
+                              child: Text(
+                                'Sign up',
+                                style: TextStyles.lightBlueText.copyWith(
+                                  fontSize: deviceInfo.screenWidth * 0.05,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
