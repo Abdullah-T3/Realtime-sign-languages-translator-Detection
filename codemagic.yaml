@@ -9,16 +9,14 @@ workflows:
       - flutter build apk --release
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
-publishing:
-  email:
-    recipients:
-      - eng.abdullahahmed59@gmail.com
-      - ammarsami255@gmail.com
-      - ammarsami2555@gmail.com
-      - sherifamr424@gmail.com
-      - omarahmeddev89@gmail.com
-      - sherifamr314@gmail.com
-      - amrsherif534@gmail.com
 
+publishing:
+  firebase:
+    firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
+    android:
+      app_id: 1:1022031179507:android:18899cdd16527fc2d6d186
+      groups:
+        - testers
     notify:
       success: true
+      failure: true
