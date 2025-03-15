@@ -8,12 +8,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:realtime_sign_languages_translator/app.dart';
-
+import 'package:realtime_sign_languages_translator/core/routing/app_routing.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(appRouter: AppRouting()));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

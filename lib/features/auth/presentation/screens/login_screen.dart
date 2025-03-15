@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:realtime_sign_languages_translator/core/Responsive/ui_component/info_widget.dart';
 import 'package:realtime_sign_languages_translator/core/helper/FormValidator/Validator.dart';
 import 'package:realtime_sign_languages_translator/core/helper/extantions.dart';
 import 'package:realtime_sign_languages_translator/core/routing/routes.dart';
+import 'package:realtime_sign_languages_translator/core/shared/cherryToast/CherryToastMsgs.dart';
 import 'package:realtime_sign_languages_translator/core/theming/colors.dart';
 import 'package:realtime_sign_languages_translator/core/theming/styles.dart';
+import 'package:realtime_sign_languages_translator/features/auth/presentation/logic/firebase_auth_cubit.dart';
 import 'package:realtime_sign_languages_translator/features/auth/presentation/screens/widgets/customTextField.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -28,10 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  // Constrained Stack for background and header
                   SizedBox(
-                    height:
-                        deviceInfo.screenHeight * 0.4, // Provide fixed height
+                    height: deviceInfo.screenHeight * 0.4,
                     child: Stack(
                       children: [
                         // Circular background
@@ -133,53 +134,77 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   SizedBox(height: deviceInfo.screenHeight * 0.04),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Column(
-                      children: [
-                        CustomTextField(
-                          label: "Email",
-                          controller: emailController,
-                          formValidator: (value) {
-                            return ValidatorHelper.isValidEmail(value);
-                          },
-                          hintText: 'Email',
+                  BlocConsumer<FirebaseAuthCubit, FirebaseAuthState>(
+                    listener: (context, state) {
+                      if (state is FirebaseAuthSuccess) {
+                        CherryToastMsgs.CherryToastSuccess(
+                          info: deviceInfo,
+                          context: context,
+                          title: "Success",
+                          description: "Login successful",
+                        );
+                        context.pushReplacementNamed(Routes.home);
+                      }
+                      if (state is FirebaseAuthFailure) {
+                        CherryToastMsgs.CherryToastError(
+                          info: deviceInfo,
+                          context: context,
+                          title: "Error",
+                          description: state.message,
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: deviceInfo.screenWidth * 0.1,
                         ),
-                        SizedBox(height: deviceInfo.screenHeight * 0.02),
-                        CustomTextField(
-                          label: "Password",
-                          controller: passwordController,
-                          formValidator: (value) {
-                            return ValidatorHelper.isValidPassword(value);
-                          },
-                          hintText: 'Password',
-                        ),
-                        SizedBox(height: deviceInfo.screenHeight * 0.08),
-                        Container(
-                          width: deviceInfo.screenWidth * 0.8,
-                          decoration: BoxDecoration(
-                            color: ColorsManager.primaryGridColor,
-                            borderRadius: BorderRadius.circular(
-                              deviceInfo.screenWidth * 0.1,
+                        child: Column(
+                          children: [
+                            CustomTextField(
+                              label: "Email",
+                              controller: emailController,
+                              formValidator: (value) {
+                                return ValidatorHelper.isValidEmail(value);
+                              },
+                              hintText: 'Email',
                             ),
-                          ),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                deviceInfo.screenWidth * 0.1,
+                            SizedBox(height: deviceInfo.screenHeight * 0.02),
+                            CustomTextField(
+                              label: "Password",
+                              controller: passwordController,
+                              formValidator: (value) {
+                                return ValidatorHelper.isValidPassword(value);
+                              },
+                              hintText: 'Password',
+                            ),
+                            SizedBox(height: deviceInfo.screenHeight * 0.08),
+                            Container(
+                              width: deviceInfo.screenWidth * 0.8,
+                              decoration: BoxDecoration(
+                                color: ColorsManager.primaryGridColor,
+                                borderRadius: BorderRadius.circular(
+                                  deviceInfo.screenWidth * 0.1,
+                                ),
+                              ),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    deviceInfo.screenWidth * 0.1,
+                                  ),
+                                ),
+                                height: deviceInfo.screenHeight * 0.06,
+                                onPressed: () async {},
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyles.lightBlueText,
+                                ),
                               ),
                             ),
-                            height: deviceInfo.screenHeight * 0.06,
-                            onPressed: () async {},
-                            child: const Text(
-                              'Login',
-                              style: TextStyles.lightBlueText,
-                            ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
 
                   const SizedBox(height: 24),
