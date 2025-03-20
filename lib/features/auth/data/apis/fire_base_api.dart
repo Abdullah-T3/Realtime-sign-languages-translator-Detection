@@ -1,13 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:realtime_sign_languages_translator/core/helper/FireBase/fire_base_helper.dart';
-
-abstract class AuthRemoteDataSource {
-  Future<User?> signUp(String email, String password, String username);
-  Future<User?> signIn(String email, String password);
-  Future<void> signOut();
-  User? getCurrentUser();
-  Stream<User?> authStateChanges();
-}
+import 'package:realtime_sign_languages_translator/core/helper/FireBase/fire_base_auth_helper.dart';
+import 'package:realtime_sign_languages_translator/features/auth/data/repo/auth_remote_datasource.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuthHelper firebaseAuthHelper;

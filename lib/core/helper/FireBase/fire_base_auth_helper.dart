@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:realtime_sign_languages_translator/core/error/firebase_exception_handler.dart';
@@ -6,15 +7,19 @@ final getIt = GetIt.instance;
 
 class FirebaseAuthHelper {
   final FirebaseAuth firebaseAuth;
-
-  FirebaseAuthHelper({required this.firebaseAuth});
+  final FirebaseFirestore firebaseFirestore;
+  FirebaseAuthHelper(this.firebaseFirestore, {required this.firebaseAuth});
 
   // Sign up with email, password, and username
   Future<User?> signUp(String email, String password, String username) async {
     try {
       UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-
+      firebaseFirestore.collection('users').doc(userCredential.user!.uid).set({
+        'username': username,
+        'email': email,
+        'password': password,
+      });
       await userCredential.user!.updateDisplayName(username);
       await userCredential.user!.reload();
 
@@ -29,6 +34,11 @@ class FirebaseAuthHelper {
     try {
       UserCredential userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
+      firebaseFirestore.collection('users').doc(userCredential.user!.uid).set({
+        'username': userCredential.user!.displayName,
+        'email': email,
+        'password': password,
+      }, SetOptions(merge: true));
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptionHandler.handleFirebaseAuthException(e);

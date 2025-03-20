@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:realtime_sign_languages_translator/features/auth/data/apis/fire_base_api.dart';
+import 'package:realtime_sign_languages_translator/features/auth/data/repo/auth_remote_datasource.dart';
 
 part 'firebase_auth_state.dart';
 

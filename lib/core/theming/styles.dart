@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:realtime_sign_languages_translator/core/Responsive/Models/device_info.dart';
 import 'colors.dart';
 
 class TextStyles {
@@ -64,3 +65,14 @@ class TextStyles {
 }
 
 class ButtonStyles {}
+
+class AppStyles {
+  static ThemeData getThemeData() => ThemeData(
+    scaffoldBackgroundColor: ColorsManager.backgroundColor,
+    appBarTheme: AppBarTheme(
+      backgroundColor: ColorsManager.blue,
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.white),
+    ),
+  );
+}

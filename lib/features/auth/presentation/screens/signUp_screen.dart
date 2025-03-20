@@ -145,8 +145,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             context: context,
                             title: 'Success',
                             description: "Sign up successfully",
+                          ).show(listenerContext);
+                          listenerContext.pushNamedAndRemoveUntil(
+                            Routes.homescreen,
+                            predicate: (route) {
+                              return false;
+                            },
                           );
-                          listenerContext.pushNamed(Routes.homescreen);
                         }
                         if (state is FirebaseAuthFailure) {
                           CherryToastMsgs.CherryToastError(
@@ -154,7 +159,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             context: context,
                             title: 'Error',
                             description: state.message,
-                          );
+                          ).show(listenerContext);
                         }
                       },
                       child: Padding(

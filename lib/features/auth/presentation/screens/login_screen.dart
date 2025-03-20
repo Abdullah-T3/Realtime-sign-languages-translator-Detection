@@ -150,8 +150,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             title: "Success",
                             description: "Login successful",
                             info: deviceInfo,
+                          ).show(listenerContext);
+                          listenerContext.pushNamedAndRemoveUntil(
+                            Routes.homescreen,
+                            predicate: (route) {
+                              return false;
+                            },
                           );
-                          listenerContext.pushNamed(Routes.homescreen);
                         }
                         if (state is FirebaseAuthFailure) {
                           CherryToastMsgs.CherryToastError(
@@ -159,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             title: "Error",
                             description: state.message,
                             info: deviceInfo,
-                          );
+                          ).show(listenerContext);
                         }
                       },
                       builder: (context, state) {
