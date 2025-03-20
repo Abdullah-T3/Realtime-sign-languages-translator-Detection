@@ -65,8 +65,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             left: 24,
                             top: 54,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: deviceInfo.screenWidth * 0.05,
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -119,7 +119,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 8),
+                                  SizedBox(
+                                    height: deviceInfo.screenHeight * 0.01,
+                                  ),
                                   Text(
                                     'Create an account to continue',
                                     style: TextStyles.lightBlueText.copyWith(
@@ -133,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: deviceInfo.screenHeight * 0.05),
                     // Authentication fields
                     BlocListener<FirebaseAuthCubit, FirebaseAuthState>(
                       listener: (listenerContext, state) {
@@ -204,7 +206,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ]),
                             ),
                             SizedBox(height: deviceInfo.screenHeight * 0.02),
-
                             Container(
                               width: deviceInfo.screenWidth * 0.8,
                               height: deviceInfo.screenHeight * 0.06,
